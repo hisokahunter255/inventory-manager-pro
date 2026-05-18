@@ -13,6 +13,7 @@ import {
   recordSale,
 } from "@/lib/inventory";
 import { useVoiceSearch } from "@/hooks/useVoiceSearch";
+import { ExportButtons } from "@/components/ExportButtons";
 
 export function SalesLogTab() {
   const qc = useQueryClient();
