@@ -14,13 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      items: {
+        Row: {
+          barcode: string | null
+          created_at: string
+          current_sale_price: number
+          id: string
+          name: string
+        }
+        Insert: {
+          barcode?: string | null
+          created_at?: string
+          current_sale_price?: number
+          id?: string
+          name: string
+        }
+        Update: {
+          barcode?: string | null
+          created_at?: string
+          current_sale_price?: number
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          batch_id: string | null
+          cost_price: number
+          created_at: string
+          id: string
+          item_id: string
+          item_name: string
+          profit: number
+          quantity: number
+          sale_price: number
+        }
+        Insert: {
+          batch_id?: string | null
+          cost_price: number
+          created_at?: string
+          id?: string
+          item_id: string
+          item_name: string
+          profit: number
+          quantity: number
+          sale_price: number
+        }
+        Update: {
+          batch_id?: string | null
+          cost_price?: number
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_name?: string
+          profit?: number
+          quantity?: number
+          sale_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "stock_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_batches: {
+        Row: {
+          cost_price: number
+          created_at: string
+          id: string
+          item_id: string
+          quantity_added: number
+          quantity_remaining: number
+          sale_price: number
+        }
+        Insert: {
+          cost_price: number
+          created_at?: string
+          id?: string
+          item_id: string
+          quantity_added: number
+          quantity_remaining: number
+          sale_price: number
+        }
+        Update: {
+          cost_price?: number
+          created_at?: string
+          id?: string
+          item_id?: string
+          quantity_added?: number
+          quantity_remaining?: number
+          sale_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_batches_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      record_sale: {
+        Args: { p_item_id: string; p_quantity: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
