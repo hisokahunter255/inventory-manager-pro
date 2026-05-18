@@ -11,6 +11,7 @@ import {
   fetchItemsWithStock,
   formatCurrency,
 } from "@/lib/inventory";
+import { ExportButtons } from "@/components/ExportButtons";
 
 export function InventoryTab() {
   const qc = useQueryClient();
@@ -165,9 +166,31 @@ export function InventoryTab() {
 
       {/* Items list */}
       <div className="rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] overflow-hidden">
-        <div className="border-b border-border p-4 flex items-center gap-2">
-          <Package className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-bold">الأصناف في المخزن ({items.length})</h3>
+        <div className="border-b border-border p-4 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Package className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-bold">الأصناف في المخزن ({items.length})</h3>
+          </div>
+          <ExportButtons
+            filename="تقرير-المخزن"
+            title="تقرير المخزن"
+            columns={[
+              { header: "الصنف", key: "name" },
+              { header: "الباركود", key: "barcode" },
+              { header: "الكمية", key: "qty" },
+              { header: "قيمة الشراء", key: "cost" },
+              { header: "قيمة البيع", key: "sale" },
+              { header: "سعر البيع الحالي", key: "price" },
+            ]}
+            rows={items.map((it) => ({
+              name: it.name,
+              barcode: it.barcode || "—",
+              qty: it.total_quantity,
+              cost: formatCurrency(it.total_cost_value),
+              sale: formatCurrency(it.total_sale_value),
+              price: formatCurrency(Number(it.current_sale_price)),
+            }))}
+          />
         </div>
         {isLoading ? (
           <div className="p-8 text-center text-muted-foreground">جارٍ التحميل...</div>
