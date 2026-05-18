@@ -146,8 +146,13 @@
     border-color: var(--color-border);
   }
 
+  html, body {
+    font-family: 'Cairo', system-ui, sans-serif;
+  }
+
   body {
-    background-color: var(--color-background);
+    background: var(--gradient-surface);
     color: var(--color-foreground);
+    min-height: 100vh;
   }
 }
