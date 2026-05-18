@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { TrendingUp, DollarSign, Package, BarChart3 } from "lucide-react";
 import { fetchSales, formatCurrency } from "@/lib/inventory";
+import { ExportButtons } from "@/components/ExportButtons";
 
 export function ProfitsTab() {
   const { data: sales = [], isLoading } = useQuery({
