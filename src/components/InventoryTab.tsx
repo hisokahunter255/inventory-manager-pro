@@ -11,6 +11,7 @@ import {
   fetchItemsWithStock,
   formatCurrency,
 } from "@/lib/inventory";
+import { ExportButtons } from "@/components/ExportButtons";
 
 export function InventoryTab() {
   const qc = useQueryClient();
