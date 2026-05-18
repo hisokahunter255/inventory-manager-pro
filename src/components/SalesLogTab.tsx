@@ -207,8 +207,26 @@ export function SalesLogTab() {
 
       {/* Recent sales */}
       <div className="rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] overflow-hidden">
-        <div className="border-b border-border p-4">
+        <div className="border-b border-border p-4 flex items-center justify-between gap-2 flex-wrap">
           <h3 className="text-lg font-bold">آخر المبيعات</h3>
+          <ExportButtons
+            filename="سجل-المبيعات"
+            title="سجل المبيعات"
+            columns={[
+              { header: "الصنف", key: "name" },
+              { header: "الكمية", key: "qty" },
+              { header: "سعر البيع", key: "price" },
+              { header: "الإجمالي", key: "total" },
+              { header: "التاريخ", key: "date" },
+            ]}
+            rows={sales.map((s) => ({
+              name: s.item_name,
+              qty: s.quantity,
+              price: formatCurrency(Number(s.sale_price)),
+              total: formatCurrency(Number(s.sale_price) * s.quantity),
+              date: new Date(s.created_at).toLocaleString("ar-EG"),
+            }))}
+          />
         </div>
         {sales.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">لا توجد مبيعات بعد</div>
