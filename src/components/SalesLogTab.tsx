@@ -14,6 +14,7 @@ import {
 } from "@/lib/inventory";
 import { useVoiceSearch } from "@/hooks/useVoiceSearch";
 import { ExportButtons } from "@/components/ExportButtons";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export function SalesLogTab() {
   const qc = useQueryClient();
