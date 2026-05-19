@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState, type FormEvent } from "react";
-import { Mic, MicOff, Search, ShoppingCart, Barcode } from "lucide-react";
+import { Mic, MicOff, Search, ShoppingCart, Barcode, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import {
 } from "@/lib/inventory";
 import { useVoiceSearch } from "@/hooks/useVoiceSearch";
 import { ExportButtons } from "@/components/ExportButtons";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export function SalesLogTab() {
   const qc = useQueryClient();
@@ -31,6 +32,18 @@ export function SalesLogTab() {
   const [sellingId, setSellingId] = useState<string | null>(null);
   const [sellQty, setSellQty] = useState("1");
   const [recording, setRecording] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
+
+  const handleBarcodeDetected = async (code: string) => {
+    setBarcodeInput("");
+    const item = await findItemByBarcode(code);
+    if (item) {
+      setSearch(item.name);
+      toast.success(`تم العثور على: ${item.name}`);
+    } else {
+      toast.error(`الباركود ${code} غير موجود في المخزن`);
+    }
+  };
 
   const { listening, supported, start, stop } = useVoiceSearch((text) => {
     setSearch(text);
@@ -119,12 +132,23 @@ export function SalesLogTab() {
             <Label className="mb-1.5 flex items-center gap-1.5">
               <Barcode className="h-4 w-4" /> مسح الباركود
             </Label>
-            <Input
-              value={barcodeInput}
-              onChange={(e) => setBarcodeInput(e.target.value)}
-              placeholder="امسح الباركود ثم اضغط Enter"
-              className="h-11"
-            />
+            <div className="flex gap-2">
+              <Input
+                value={barcodeInput}
+                onChange={(e) => setBarcodeInput(e.target.value)}
+                placeholder="امسح الباركود ثم اضغط Enter"
+                className="h-11"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setScanOpen(true)}
+                className="h-11 shrink-0"
+                title="مسح بكاميرا الموبايل"
+              >
+                <Camera className="h-4 w-4 ml-1" /> كاميرا
+              </Button>
+            </div>
           </form>
         </div>
       </div>
@@ -261,6 +285,12 @@ export function SalesLogTab() {
           </div>
         )}
       </div>
+
+      <BarcodeScanner
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
+        onDetected={handleBarcodeDetected}
+      />
     </div>
   );
 }

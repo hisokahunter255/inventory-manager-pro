@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
-import { Plus, Trash2, Package, Barcode, ScanLine } from "lucide-react";
+import { Plus, Trash2, Package, Barcode, ScanLine, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import {
   formatCurrency,
 } from "@/lib/inventory";
 import { ExportButtons } from "@/components/ExportButtons";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export function InventoryTab() {
   const qc = useQueryClient();
@@ -26,6 +27,7 @@ export function InventoryTab() {
   const [cost, setCost] = useState("");
   const [sale, setSale] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -108,13 +110,24 @@ export function InventoryTab() {
             <Label htmlFor="barcode-input" className="mb-1.5 flex items-center gap-1.5">
               <Barcode className="h-4 w-4" /> الباركود
             </Label>
-            <Input
-              id="barcode-input"
-              value={barcode}
-              onChange={(e) => setBarcode(e.target.value)}
-              onKeyDown={handleBarcodeKey}
-              placeholder="امسح أو اكتب الباركود"
-            />
+            <div className="relative">
+              <Input
+                id="barcode-input"
+                value={barcode}
+                onChange={(e) => setBarcode(e.target.value)}
+                onKeyDown={handleBarcodeKey}
+                placeholder="امسح أو اكتب الباركود"
+                className="pl-10"
+              />
+              <button
+                type="button"
+                onClick={() => setScanOpen(true)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-md bg-primary/10 p-1.5 text-primary hover:bg-primary/20"
+                title="مسح بالكاميرا"
+              >
+                <Camera className="h-4 w-4" />
+              </button>
+            </div>
           </div>
           <div>
             <Label htmlFor="qty-input" className="mb-1.5 block">الكمية *</Label>
@@ -241,6 +254,15 @@ export function InventoryTab() {
           </div>
         )}
       </div>
+
+      <BarcodeScanner
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
+        onDetected={(code) => {
+          setBarcode(code);
+          toast.success("تم مسح الباركود: " + code);
+        }}
+      />
     </div>
   );
 }
