@@ -254,6 +254,15 @@ export function InventoryTab() {
           </div>
         )}
       </div>
+
+      <BarcodeScanner
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
+        onDetected={(code) => {
+          setBarcode(code);
+          toast.success("تم مسح الباركود: " + code);
+        }}
+      />
     </div>
   );
 }
