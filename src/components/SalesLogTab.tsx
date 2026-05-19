@@ -285,6 +285,12 @@ export function SalesLogTab() {
           </div>
         )}
       </div>
+
+      <BarcodeScanner
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
+        onDetected={handleBarcodeDetected}
+      />
     </div>
   );
 }
