@@ -27,6 +27,7 @@ export function InventoryTab() {
   const [cost, setCost] = useState("");
   const [sale, setSale] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
